@@ -1,0 +1,35 @@
+{
+"oeuvres": [
+{
+"id": 1,
+"titre": "Tapis berbère",
+"categorie": "Artisanat",
+"region": "Marrakech",
+"image": "https://via.placeholder.com/200",
+"favoris": false
+}
+],
+"categories": [
+{ "id": 1, "nom": "Artisanat" },
+{ "id": 2, "nom": "Gastronomie" },
+{ "id": 3, "nom": "Habits" },
+{ "id": 4, "nom": "Architecture" },
+{ "id": 5, "nom": "Musique & Danse" }
+],
+"artisans": [
+{
+"id": 1,
+"nom": "Fatima El Handira",
+"specialite": "Tissage",
+"region": "Fès"
+}
+],
+"evenements": [
+{
+"id": 1,
+"titre": "Festival de Gnaoua",
+"ville": "Essaouira",
+"date": "2025-08-15"
+}
+]
+}
