@@ -1,15 +1,41 @@
-import "./App.css";
-// import axios from 'axios';
-// import Teste from './Teste';
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+// Navbar
+import Navbar from "./components/Navbar";
+
+// Pages
+import Accueil from "./pages/Accueil";
+import Publier from "./pages/Publier";
+import Details from "./pages/Details";
+import Favoris from "./pages/Favoris";
+import Apropos from "./pages/Apropos";
+import Admin from "./pages/Admin";
+
+// Footer
 import Footer from "./components/Footer";
 
 function App() {
   return (
     <div className="flex flex-col min-h-screen">
-      <main className="flex-grow">
-        
-      </main>
+      <BrowserRouter>
+        {/* Navbar reste en haut tout le temps */}
+        <Navbar />
 
+        {/* Les routes changent le contenu en dessous */}
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Accueil />} />
+            <Route path="/publier" element={<Publier />} />
+            <Route path="/oeuvre/:id" element={<Details />} /> {/* route dynamique */}
+            <Route path="/favoris" element={<Favoris />} />
+            <Route path="/apropos" element={<Apropos />} />
+            <Route path="/admin" element={<Admin />} />
+          </Routes>
+        </main>
+      </BrowserRouter>
+
+      {/* Footer toujours en bas */}
       <Footer />
     </div>
   );
