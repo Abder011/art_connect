@@ -10,19 +10,33 @@ import Favoris from "./pages/Favoris";
 import Apropos from "./pages/Apropos";
 import Admin from "./pages/Admin";
 
+
+
+
+
 function App() {
   return (
-    <BrowserRouter>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Accueil />} />
-        <Route path="/publier" element={<Publier />} />
-        <Route path="/oeuvre/:id" element={<Details />} />
-        <Route path="/favoris" element={<Favoris />} />
-        <Route path="/apropos" element={<Apropos />} />
-        <Route path="/admin" element={<Admin />} />
-      </Routes>
-    </BrowserRouter>
+    <div className="flex flex-col min-h-screen">
+      <BrowserRouter>
+        {/* Navbar reste en haut tout le temps */}
+        <Navbar />
+
+        {/* Les routes changent le contenu en dessous */}
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Accueil />} />
+            <Route path="/publier" element={<Publier />} />
+            <Route path="/oeuvre/:id" element={<Details />} /> {/* route dynamique */}
+            <Route path="/favoris" element={<Favoris />} />
+            <Route path="/apropos" element={<Apropos />} />
+            <Route path="/admin" element={<Admin />} />
+          </Routes>
+        </main>
+      </BrowserRouter>
+
+    
+    </div>
+
   );
 }
 
