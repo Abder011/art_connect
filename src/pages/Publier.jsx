@@ -3,6 +3,7 @@ import { Camera } from "lucide-react";
 
 export default function Publier() {
   return (
+
     <div className="min-h-screen" style={{ backgroundColor: "#fff7f3" }}>
       <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
