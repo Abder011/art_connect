@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
 
 // Pages
 import Accueil from "./pages/Accueil";
@@ -23,7 +22,6 @@ function App() {
         <Route path="/apropos" element={<Apropos />} />
         <Route path="/admin" element={<Admin />} />
       </Routes>
-      <Footer />
     </BrowserRouter>
   );
 }

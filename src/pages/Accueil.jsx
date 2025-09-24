@@ -7,7 +7,7 @@ export default function Accueil() {
       <div className="flex-grow">
         <h1>Accueil</h1>
       </div>
-      <Footer />
+            <Footer />
     </div>
   );
 }
