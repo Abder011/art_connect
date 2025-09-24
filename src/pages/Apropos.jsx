@@ -30,7 +30,7 @@ export default function Apropos() {
         </div>
         <div class="p-4 border rounded-xl hover:shadow-md transition">
           <h3 class="font-semibold text-orange-500 mb-2">Participer aux événements</h3>
-          <p>Suivez et participez à des événements culturels pour vivre l’art marocain en direct.</p>
+          <p>Suivez et participez à des événements culturels pour vivre l'art marocain en direct.</p>
         </div>
         <div class="p-4 border rounded-xl hover:shadow-md transition">
           <h3 class="font-semibold text-yellow-500 mb-2">Sauvegarder vos favoris</h3>
@@ -58,7 +58,7 @@ export default function Apropos() {
         
         <div class="bg-red-100 p-6 rounded-2xl text-center">
           <h3 class="font-semibold text-red-500 mb-2">Explorer les créations</h3>
-          <p>Respecter et valoriser l’héritage culturel marocain.</p>
+          <p>Respecter et valoriser l'héritage culturel marocain.</p>
         </div>
 
         <div class="bg-orange-100 p-6 rounded-2xl text-center">
