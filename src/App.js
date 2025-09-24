@@ -13,7 +13,7 @@ import Apropos from "./pages/Apropos";
 import Admin from "./pages/Admin";
 
 // Footer
-import Footer from "./components/Footer";
+
 
 function App() {
   return (
@@ -35,8 +35,7 @@ function App() {
         </main>
       </BrowserRouter>
 
-      {/* Footer toujours en bas */}
-      <Footer />
+    
     </div>
   );
 }
