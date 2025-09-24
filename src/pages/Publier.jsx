@@ -5,6 +5,7 @@ export default function Publier() {
     <>
        
         <h1>Publier</h1>
+        
     </>
   )
 }
