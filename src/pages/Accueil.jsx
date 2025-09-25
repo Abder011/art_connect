@@ -13,7 +13,7 @@ export default function Accueil() {
         <p className="text-gray-600 mt-2">
           Explorez les œuvres, les artisans et la culture de toutes les régions du Maroc
         </p>
-        <button className="mt-5 bg-red-600 text-white px-6 py-2 rounded-md hover:bg-red-700">
+        <button className="mt-5 bg-pink-600 text-white px-6 py-2 rounded-md ">
           Publier une œuvre
         </button>
       </header>
@@ -29,7 +29,7 @@ export default function Accueil() {
             <input
               type="text"
               placeholder="Rechercher par mot-clé ..."
-              className="flex-1 outline-none ml-2"
+              className="flex-1 outline-none ml-2 "
             />
           </div>
           <select className="border rounded-md px-3 py-2 min-w-[140px]">
@@ -38,7 +38,7 @@ export default function Accueil() {
             <option>Gastronomie</option>
             <option>Habits</option>
           </select>
-          <button className="bg-red-600 text-white px-5 py-2 rounded-md hover:bg-red-700">
+          <button className="bg-pink-600 text-white px-5 py-2 rounded-md ">
             Rechercher
           </button>
           <button className="bg-gray-100 px-5 py-2 rounded-md hover:bg-gray-200">
@@ -212,6 +212,7 @@ l
           </div>
         </div>
       </section>
+      <Footer/>
     </div>
    
   );

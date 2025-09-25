@@ -3,7 +3,7 @@ import Footer from "../components/Footer";
 
 export default function Admin() {
   return (
-    <div className="bg-[#fff9f7] min-h-screen py-10 px-6">
+<div className="bg-[#fff9f7] min-h-screen flex flex-col">
       {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-2xl font-bold">
@@ -157,7 +157,7 @@ export default function Admin() {
           </div>
         </div>
       </div>
-      <Footer/>
+      <Footer className="mt-auto w-full" />
     </div>
   );
 }
