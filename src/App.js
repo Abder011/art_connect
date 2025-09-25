@@ -1,7 +1,5 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
-// Navbar
 import Navbar from "./components/Navbar";
 
 // Pages
@@ -12,7 +10,8 @@ import Favoris from "./pages/Favoris";
 import Apropos from "./pages/Apropos";
 import Admin from "./pages/Admin";
 
-// Footer
+
+
 
 
 function App() {
@@ -37,6 +36,7 @@ function App() {
 
     
     </div>
+
   );
 }
 
