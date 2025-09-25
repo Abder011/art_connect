@@ -2,6 +2,7 @@ import React from "react";
 
 export default function Favoris() {
   return (
+
     <div className="min-h-screen" style={{ backgroundColor: "#fff7f3" }}>
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
