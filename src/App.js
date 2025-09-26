@@ -10,33 +10,31 @@ import Favoris from "./pages/Favoris";
 import Apropos from "./pages/Apropos";
 import Admin from "./pages/Admin";
 
-
-
-
+// Contexte global
+import { GlobalProvider } from "./context/GlobalContext";
 
 function App() {
   return (
-    <div className="flex flex-col min-h-screen">
-      <BrowserRouter>
-        {/* Navbar reste en haut tout le temps */}
-        <Navbar />
+    <GlobalProvider>
+      <div className="flex flex-col min-h-screen">
+        <BrowserRouter>
+          {/* Navbar reste en haut tout le temps */}
+          <Navbar />
 
-        {/* Les routes changent le contenu en dessous */}
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Accueil />} />
-            <Route path="/publier" element={<Publier />} />
-            <Route path="/oeuvre/:id" element={<Details />} /> {/* route dynamique */}
-            <Route path="/favoris" element={<Favoris />} />
-            <Route path="/apropos" element={<Apropos />} />
-            <Route path="/admin" element={<Admin />} />
-          </Routes>
-        </main>
-      </BrowserRouter>
-
-    
-    </div>
-
+          {/* Les routes changent le contenu en dessous */}
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Accueil />} />
+              <Route path="/publier" element={<Publier />} />
+              <Route path="/oeuvre/:id" element={<Details />} /> {/* route dynamique */}
+              <Route path="/favoris" element={<Favoris />} />
+              <Route path="/apropos" element={<Apropos />} />
+              <Route path="/admin" element={<Admin />} />
+            </Routes>
+          </main>
+        </BrowserRouter>
+      </div>
+    </GlobalProvider>
   );
 }
 

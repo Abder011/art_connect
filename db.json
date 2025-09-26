@@ -1,35 +1,81 @@
 {
-"oeuvres": [
-{
-"id": 1,
-"titre": "Tapis berbère",
-"categorie": "Artisanat",
-"region": "Marrakech",
-"image": "https://via.placeholder.com/200",
-"favoris": false
-}
-],
-"categories": [
-{ "id": 1, "nom": "Artisanat" },
-{ "id": 2, "nom": "Gastronomie" },
-{ "id": 3, "nom": "Habits" },
-{ "id": 4, "nom": "Architecture" },
-{ "id": 5, "nom": "Musique & Danse" }
-],
-"artisans": [
-{
-"id": 1,
-"nom": "Fatima El Handira",
-"specialite": "Tissage",
-"region": "Fès"
-}
-],
-"evenements": [
-{
-"id": 1,
-"titre": "Festival de Gnaoua",
-"ville": "Essaouira",
-"date": "2025-08-15"
-}
-]
+  "oeuvres": [
+    {
+      "id": 1,
+      "title": "Caftan Royal",
+      "location": "Fès",
+      "description": "Caftan brodé à la main avec d'or",
+      "author": "Maison Bennis",
+      "image": "/assets/img2.jpg",
+      "category": "Habits"
+    },
+    {
+      "id": 2,
+      "title": "Tagine aux Légumes",
+      "location": "Casablanca",
+      "description": "Plat traditionnel cuit dans un tagine",
+      "author": "Chef Moha",
+      "image": "/assets/img3.jpg",
+      "category": "Gastronomie"
+    },
+    {
+      "id": 3,
+      "title": "Danse Ahidous",
+      "location": "Atlas",
+      "description": "Danse traditionnelle berbère",
+      "author": "Ahidous d'Azrou",
+      "image": "/assets/img4.jpg",
+      "category": "Musique & Danse"
+    }
+  ],
+  "categories": [
+    { "id": 1, "name": "Artisanat", "count": 1 },
+    { "id": 2, "name": "Gastronomie", "count": 1 },
+    { "id": 3, "name": "Habits", "count": 1 },
+    { "id": 4, "name": "Architecture", "count": 1 },
+    { "id": 5, "name": "Musique & Danse", "count": 1 }
+  ],
+  "evenements": [
+    {
+      "id": 1,
+      "title": "Festival Gnaoua",
+      "location": "Essaouira / Juin 2025",
+      "description": "Concerts, ateliers et expositions autour de la musique gnaoua",
+      "image": "/assets/img5.jpg"
+    },
+    {
+      "id": 2,
+      "title": "Exposition d'art contemporain",
+      "location": "Rabat / Août 2025",
+      "description": "Œuvres d'artistes marocains émergents",
+      "image": "/assets/img6.jpg"
+    },
+    {
+      "id": 3,
+      "title": "Salon International du Livre",
+      "location": "Casablanca / Juillet 2025",
+      "description": "Rencontres avec des auteurs, séances de dédicaces",
+      "image": "/assets/img7.jpg"
+    }
+  ],
+  "artisans": [
+    {
+      "id": 1,
+      "name": "Kenza Bennani",
+      "specialty": "Créatrice et artisane de bijoux",
+      "image": "/assets/img8.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Abdelhamid Krim",
+      "specialty": "Maître artisan du cuir",
+      "image": "/assets/img9.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Hassan Hajjaj",
+      "specialty": "Designer et artisan contemporain",
+      "image": "/assets/img10.jpg"
+    }
+  ]
 }
