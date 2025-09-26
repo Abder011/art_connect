@@ -1,86 +1,74 @@
-import React from "react";
-import { HomeIcon, PlusIcon, HeartIcon, InformationCircleIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
-import { NavLink } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom"
 
 export default function Navbar() {
+  const location = useLocation()
+
+  const isActive = (path) => {
+    return location.pathname === path
+  }
+
   return (
-   <header className="bg-white shadow-sm">
-      <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-3">
+    <nav className="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center space-x-2 ">
-          <span className="font-bold text-lg ml-18">
-            ArtConnect <span className="text-pink-600">Maroc</span>
-          </span>
-        </div>
+        <Link to="/" className="flex items-center">
+          <h1 className="text-xl font-bold">
+            ArtConnect <span className="text-[#D30046]">Maroc</span>
+          </h1>
+        </Link>
 
-        {/* Menu */}
-        <nav className="flex items-center space-x-6 text-gray-700">
-          {/* Accueil */}
-          <NavLink
+        {/* Navigation Links */}
+        <div className="flex items-center space-x-1">
+          <Link
             to="/"
-            className={({ isActive }) =>
-              isActive
-                ? "flex items-center space-x-2 bg-pink-600 text-white px-3 py-1.5 rounded-lg shadow-sm"
-                : "flex items-center space-x-2 hover:text-pink-600"
-            }
+            className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              isActive("/") ? "bg-[#D30046] text-white" : "text-gray-600 hover:text-[#D30046] hover:bg-gray-50"
+            }`}
           >
-            <HomeIcon className="w-5 h-5" />
-            <span>Accueil</span>
-          </NavLink>
+            <span className="mr-2">🏠</span>
+            Accueil
+          </Link>
 
-          {/* Publier */}
-          <NavLink
+          <Link
             to="/publier"
-            className={({ isActive }) =>
-              isActive
-                ? "flex items-center space-x-2 text-pink-600 font-semibold"
-                : "flex items-center space-x-2 hover:text-pink-600"
-            }
+            className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              isActive("/publier") ? "bg-[#D30046] text-white" : "text-gray-600 hover:text-[#D30046] hover:bg-gray-50"
+            }`}
           >
-            <PlusIcon className="w-5 h-5" />
-            <span>Publier</span>
-          </NavLink>
+            <span className="mr-2">+</span>
+            Publier
+          </Link>
 
-          {/* Favoris */}
-          <NavLink
+          <Link
             to="/favoris"
-            className={({ isActive }) =>
-              isActive
-                ? "flex items-center space-x-2 text-pink-600 font-semibold"
-                : "flex items-center space-x-2 hover:text-pink-600"
-            }
+            className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              isActive("/favoris") ? "bg-[#D30046] text-white" : "text-gray-600 hover:text-[#D30046] hover:bg-gray-50"
+            }`}
           >
-            <HeartIcon className="w-5 h-5" />
-            <span>Favoris</span>
-          </NavLink>
+            <span className="mr-2">❤️</span>
+            Favoris
+          </Link>
 
-          {/* À propos */}
-          <NavLink
+          <Link
             to="/apropos"
-            className={({ isActive }) =>
-              isActive
-                ? "flex items-center space-x-2 text-pink-600 font-semibold"
-                : "flex items-center space-x-2 hover:text-pink-600"
-            }
+            className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              isActive("/apropos") ? "bg-[#D30046] text-white" : "text-gray-600 hover:text-[#D30046] hover:bg-gray-50"
+            }`}
           >
-            <InformationCircleIcon className="w-5 h-5" />
-            <span>À propos</span>
-          </NavLink>
+            <span className="mr-2">ℹ️</span>À propos
+          </Link>
 
-          {/* Admin */}
-          <NavLink
+          <Link
             to="/admin"
-            className={({ isActive }) =>
-              isActive
-                ? "flex items-center space-x-2 text-pink-600 font-semibold"
-                : "flex items-center space-x-2 hover:text-pink-600 mr-30"
-            }
+            className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              isActive("/admin") ? "bg-[#D30046] text-white" : "text-gray-600 hover:text-[#D30046] hover:bg-gray-50"
+            }`}
           >
-            <Cog6ToothIcon className="w-5 h-5" />
-            <span>Admin</span>
-          </NavLink>
-        </nav>
+            <span className="mr-2">⚙️</span>
+            Admin
+          </Link>
+        </div>
       </div>
-    </header>
-  );
+    </nav>
+  )
 }
