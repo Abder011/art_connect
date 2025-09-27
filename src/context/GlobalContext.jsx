@@ -1,38 +1,32 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+"use client";
+import { createContext, useContext, useState } from "react";
 
 const GlobalContext = createContext();
 
-export const GlobalProvider = ({ children }) => {
-  const [favoris, setFavoris] = useState(() => {
-    // Charger depuis le localStorage au démarrage
-    const saved = localStorage.getItem("favoris");
-    return saved ? JSON.parse(saved) : [];
-  });
+export function GlobalProvider({ children }) {
+  // Favoris (déjà existant)
+  const [favoris, setFavoris] = useState([]);
 
-  // Sauvegarder dans localStorage à chaque changement
-  useEffect(() => {
-    localStorage.setItem("favoris", JSON.stringify(favoris));
-  }, [favoris]);
+  // 🔴 Nouveau : œuvres publiées
+  const [oeuvres, setOeuvres] = useState([]);
 
-  const addToFavoris = (item) => {
-    if (!favoris.find((f) => f.id === item.id)) {
-      setFavoris([...favoris, item]);
-    }
-  };
-
-  const removeFromFavoris = (id) => {
-    setFavoris(favoris.filter((item) => item.id !== id));
-  };
-
+  const addToFavoris = (item) => setFavoris((prev) => [...prev, item]);
+  const removeFromFavoris = (id) =>
+    setFavoris((prev) => prev.filter((item) => item.id !== id));
   const isFavorite = (id) => favoris.some((item) => item.id === id);
+
+  // 🔴 Fonction pour publier une œuvre
+  const publierOeuvre = (oeuvre) => {
+    setOeuvres((prev) => [...prev, { id: Date.now(), ...oeuvre }]);
+  };
 
   return (
     <GlobalContext.Provider
-      value={{ favoris, addToFavoris, removeFromFavoris, isFavorite }}
+      value={{ favoris, addToFavoris, removeFromFavoris, isFavorite, oeuvres, publierOeuvre }}
     >
       {children}
     </GlobalContext.Provider>
   );
-};
+}
 
 export const useGlobal = () => useContext(GlobalContext);

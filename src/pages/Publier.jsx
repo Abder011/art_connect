@@ -1,8 +1,11 @@
 "use client"
 
 import { useState } from "react"
+import { useGlobal } from "../context/GlobalContext"
 
 export default function Publier() {
+  const { publierOeuvre } = useGlobal()
+
   const [formData, setFormData] = useState({
     titre: "",
     categorie: "",
@@ -62,23 +65,25 @@ export default function Publier() {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    // Validation
     if (!formData.titre || !formData.categorie || !formData.region || !formData.image) {
       alert("Veuillez remplir tous les champs obligatoires")
       return
     }
 
-    // Here you would typically upload to Cloudinary and save to your backend
-    console.log("Form submitted:", formData)
+    // 🔴 Ajouter l'œuvre au contexte global
+    publierOeuvre({
+      title: formData.titre,
+      category: formData.categorie,
+      location: formData.region,
+      description: "Ajouté par la communauté",
+      author: "Utilisateur",
+      image: imagePreview,
+    })
+
     alert("Œuvre publiée avec succès !")
 
     // Reset form
-    setFormData({
-      titre: "",
-      categorie: "",
-      region: "",
-      image: null,
-    })
+    setFormData({ titre: "", categorie: "", region: "", image: null })
     setImagePreview(null)
   }
 
@@ -94,7 +99,7 @@ export default function Publier() {
         {/* Form */}
         <div className="bg-white rounded-2xl shadow-lg p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Titre de l'oeuvre */}
+            {/* Titre */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Titre de l'oeuvre <span className="text-[#D30046]">*</span>
@@ -125,9 +130,7 @@ export default function Publier() {
                 >
                   <option value="">Sélectionnez une catégorie</option>
                   {categories.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
+                    <option key={cat} value={cat}>{cat}</option>
                   ))}
                 </select>
               </div>
@@ -165,7 +168,7 @@ export default function Publier() {
                 {imagePreview ? (
                   <div className="space-y-4">
                     <img
-                      src={imagePreview || "/placeholder.svg"}
+                      src={imagePreview}
                       alt="Preview"
                       className="max-w-full max-h-48 mx-auto rounded-lg object-cover"
                     />
@@ -204,13 +207,11 @@ export default function Publier() {
               </div>
             </div>
 
-            {/* Required Fields Notice */}
+            {/* Footer */}
             <div className="flex items-center justify-between pt-4">
               <p className="text-sm text-gray-500">
                 <span className="text-[#D30046]">*</span> Champs obligatoires
               </p>
-
-              {/* Submit Button */}
               <button
                 type="submit"
                 className="bg-[#D30046] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#B8003A] transition-colors focus:ring-2 focus:ring-[#D30046] focus:ring-offset-2"

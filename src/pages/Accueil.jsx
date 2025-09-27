@@ -5,7 +5,7 @@ import { useGlobal } from "../context/GlobalContext";
 import Footer from "../components/Footer";
 
 export default function Accueil() {
-  const { addToFavoris, removeFromFavoris, isFavorite } = useGlobal();
+const { addToFavoris, removeFromFavoris, isFavorite, oeuvres } = useGlobal();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
 
@@ -159,49 +159,60 @@ export default function Accueil() {
       </section>
 
       {/* -------- DERNIERS AJOUTS -------- */}
-      <section className="py-12 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-center gap-3 mb-8">
-            <span className="text-2xl">💎</span>
-            <h2 className="text-2xl font-bold">Derniers ajouts</h2>
-          </div>
+<section className="py-12 px-6">
+  <div className="max-w-6xl mx-auto">
+    <div className="flex items-center gap-3 mb-8">
+      <span className="text-2xl">💎</span>
+      <h2 className="text-2xl font-bold">Derniers ajouts</h2>
+    </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredAjouts.length > 0 ? (
-              filteredAjouts.map((item) => (
-                <div
-                  key={item.id}
-                  className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {filteredAjouts.length > 0 ? (
+        [...derniersAjouts, ...oeuvres]
+          .filter((item) =>
+            item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.category?.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+          .map((item) => (
+            <div
+              key={item.id || item.title}
+              className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+            >
+              <div className="relative">
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-full h-48 object-cover"
+                />
+                <button
+                  onClick={() => handleFavoriteToggle(item)}
+                  className={`absolute top-3 right-3 w-10 h-10 rounded-full shadow-md flex items-center justify-center transition-colors ${
+                    isFavorite(item.id || item.title)
+                      ? "bg-[#D30046] text-white"
+                      : "bg-white text-gray-400 hover:text-[#D30046]"
+                  }`}
                 >
-                  <div className="relative">
-                    <img src={item.image} alt={item.title} className="w-full h-48 object-cover" />
-                    <button
-                      onClick={() => handleFavoriteToggle(item)}
-                      className={`absolute top-3 right-3 w-10 h-10 rounded-full shadow-md flex items-center justify-center transition-colors ${
-                        isFavorite(item.id)
-                          ? "bg-[#D30046] text-white"
-                          : "bg-white text-gray-400 hover:text-[#D30046]"
-                      }`}
-                    >
-                      ❤️
-                    </button>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
-                    <p className="text-sm text-gray-500 flex items-center gap-1 mb-2">
-                      📍 {item.location}
-                    </p>
-                    <p className="text-gray-700 text-sm mb-3">{item.description}</p>
-                    <p className="text-xs text-gray-500">Par {item.author}</p>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p className="text-gray-500">Aucune œuvre trouvée.</p>
-            )}
-          </div>
-        </div>
-      </section>
+                  ❤️
+                </button>
+              </div>
+              <div className="p-4">
+                <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
+                <p className="text-sm text-gray-500 flex items-center gap-1 mb-2">
+                  📍 {item.location}
+                </p>
+                <p className="text-gray-700 text-sm mb-3">{item.description}</p>
+                <p className="text-xs text-gray-500">Par {item.author}</p>
+              </div>
+            </div>
+          ))
+      ) : (
+        <p className="text-gray-500">Aucune œuvre trouvée.</p>
+      )}
+    </div>
+  </div>
+</section>
+
 
       {/* -------- CATEGORIES -------- */}
       <section className="px-6 max-w-6xl mx-auto mb-12">
