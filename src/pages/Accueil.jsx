@@ -1,20 +1,16 @@
-import React from "react";
+"use client";
+
+import { useState } from "react";
+import { useGlobal } from "../context/GlobalContext"; 
 import Footer from "../components/Footer";
-import { useGlobal } from "../context/GlobalContext";
+
 
 export default function Accueil() {
-  const { favoris, addToFavoris, removeFromFavoris, isFavorite } = useGlobal();
+  const { addToFavoris, removeFromFavoris, isFavorite } = useGlobal();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
 
-  // Fonction pour basculer un favori
-  const handleFavoriteToggle = (item) => {
-    if (isFavorite(item.id)) {
-      removeFromFavoris(item.id);
-    } else {
-      addToFavoris(item);
-    }
-  };
-
-  // Données des derniers ajouts
+  // -------- Données exemples --------
   const derniersAjouts = [
     {
       id: 1,
@@ -45,86 +41,149 @@ export default function Accueil() {
     },
   ];
 
+  const evenements = [
+    {
+      id: 1,
+      title: "Festival Gnaoua",
+      location: "Essaouira / Juin 2025",
+      description: "Concerts, ateliers et expositions autour de la musique gnaoua",
+      image: "/assets/img5.jpg",
+    },
+    {
+      id: 2,
+      title: "Exposition d'art contemporain",
+      location: "Rabat / Août 2025",
+      description: "Œuvres d'artistes marocains émergents",
+      image: "/assets/img6.jpg",
+    },
+    {
+      id: 3,
+      title: "Salon International du Livre",
+      location: "Casablanca / Juillet 2025",
+      description: "Rencontres avec des auteurs, séances de dédicaces",
+      image: "/assets/img7.jpg",
+    },
+  ];
+
+  const artisans = [
+    {
+      id: 1,
+      name: "Kenza Bennani",
+      specialty: "Créatrice et artisane de bijoux",
+      image: "/assets/img8.jpg",
+    },
+    {
+      id: 2,
+      name: "Abdelhamid Krim",
+      specialty: "Maître artisan du cuir",
+      image: "/assets/img9.jpg",
+    },
+    {
+      id: 3,
+      name: "Hassan Hajjaj",
+      specialty: "Designer et artisan contemporain",
+      image: "/assets/img10.jpg",
+    },
+  ];
+
+  const categories = [
+    { name: "Artisanat", count: 1 },
+    { name: "Gastronomie", count: 1 },
+    { name: "Habits", count: 1 },
+    { name: "Architecture", count: 1 },
+    { name: "Musique & Danse", count: 1 },
+  ];
+
+  // -------- Favoris --------
+  const handleFavoriteToggle = (item) => {
+    if (isFavorite(item.id)) {
+      removeFromFavoris(item.id);
+    } else {
+      addToFavoris(item);
+    }
+  };
+
   return (
     <div className="bg-[#fff7f5] min-h-screen text-gray-800">
       {/* -------- HEADER -------- */}
       <header className="text-center py-8">
-        <h1 className="text-3xl font-bold">
-          Art<span className="text-red-600">Connect</span>{" "}
+        <h1 className="text-4xl font-bold mb-6">
+          Art<span className="text-[#D30046]">Connect</span>{" "}
           <span className="text-green-600">Maroc</span>
         </h1>
-        <p className="text-gray-600 mt-2">
+        <p className="text-gray-600 mb-8 text-lg">
           Explorez les œuvres, les artisans et la culture de toutes les régions du Maroc
         </p>
-        <button className="mt-5 bg-pink-600 text-white px-6 py-2 rounded-md ">
+        <button className="bg-[#D30046] text-white px-7 py-3 mb-6 rounded-lg font-medium hover:bg-[#B8003A] transition-colors">
           Publier une œuvre
         </button>
       </header>
 
       {/* -------- BARRE DE RECHERCHE -------- */}
-      <section className="bg-white max-w-4xl mx-auto rounded-xl shadow-sm p-6 mb-10">
-        <h2 className="text-center text-lg font-medium mb-4">
-          Découvrez le patrimoine marocain
-        </h2>
-        <div className="flex flex-wrap gap-4 justify-center">
-          <div className="flex items-center border rounded-md px-3 py-2 flex-1 min-w-[180px]">
-            🔍
+      <section className="bg-white mx-auto rounded-xl shadow-sm p-6 mb-5 mx-40">
+        <h2 className="text-center text-xl font-semibold mb-6">Découvrez le patrimoine marocain</h2>
+        <div className="flex flex-wrap gap-4 justify-center items-center">
+          <div className="flex items-center border rounded-lg px-4 py-3 flex-1 min-w-[200px] bg-gray-50">
+            <span className="text-gray-400 mr-3">🔍</span>
             <input
               type="text"
               placeholder="Rechercher par mot-clé ..."
-              className="flex-1 outline-none ml-2 "
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="flex-1 outline-none bg-transparent"
             />
           </div>
-          <select className="border rounded-md px-3 py-2 min-w-[140px]">
-            <option>Catégorie</option>
-            <option>Artisanat</option>
-            <option>Gastronomie</option>
-            <option>Habits</option>
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="border rounded-lg px-4 py-3 min-w-[140px] bg-white"
+          >
+            <option value="">Catégorie</option>
+            <option value="artisanat">Artisanat</option>
+            <option value="gastronomie">Gastronomie</option>
+            <option value="habits">Habits</option>
+            <option value="architecture">Architecture</option>
+            <option value="musique">Musique & Danse</option>
           </select>
-          <button className="bg-pink-600 text-white px-5 py-2 rounded-md ">
+          <button className="bg-[#D30046] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#B8003A] transition-colors">
             Rechercher
           </button>
-          <button className="bg-gray-100 px-5 py-2 rounded-md hover:bg-gray-200">
+          <button className="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors">
             Réinitialiser
           </button>
         </div>
       </section>
 
       {/* -------- DERNIERS AJOUTS -------- */}
-      <section className="bg-[#fff6f4] py-10 px-6">
+      <section className="py-12 px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="flex items-center gap-2 mb-6 ml-28">
-            <span className="text-pink-500 text-xl">💎</span>
+          <div className="flex items-center gap-3 mb-8">
+            <span className="text-2xl">💎</span>
             <h2 className="text-2xl font-bold">Derniers ajouts</h2>
           </div>
 
-          <div className="flex flex-wrap gap-6 justify-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {derniersAjouts.map((item) => (
-              <div key={item.id} className="bg-white rounded-xl shadow-md w-72 overflow-hidden">
+              <div
+                key={item.id}
+                className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+              >
                 <div className="relative">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-48 object-cover"
-                  />
+                  <img src={item.image} alt={item.title} className="w-full h-48 object-cover" />
                   <button
-                    className={`absolute top-2 right-2 p-2 rounded-full shadow transition-colors ${
-                      isFavorite(item.id)
-                        ? "bg-red-600 text-white"
-                        : "bg-white text-gray-400 hover:text-red-600 hover:bg-gray-100"
-                    }`}
                     onClick={() => handleFavoriteToggle(item)}
+                    className={`absolute top-3 right-3 w-10 h-10 rounded-full shadow-md flex items-center justify-center transition-colors ${
+                      isFavorite(item.id) ? "bg-[#D30046] text-white" : "bg-white text-gray-400 hover:text-[#D30046]"
+                    }`}
                   >
                     ❤️
                   </button>
                 </div>
                 <div className="p-4">
-                  <h3 className="text-lg font-semibold">{item.title}</h3>
-                  <p className="text-sm text-gray-500 flex items-center gap-1">
-                    📍 {item.location}
-                  </p>
-                  <p className="text-gray-700 text-sm mt-1">{item.description}</p>
-                  <p className="text-xs text-gray-500 mt-2">Par {item.author}</p>
+                  <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
+                  <p className="text-sm text-gray-500 flex items-center gap-1 mb-2">📍 {item.location}</p>
+                  <p className="text-gray-700 text-sm mb-3">{item.description}</p>
+                  <p className="text-xs text-gray-500">Par {item.author}</p>
                 </div>
               </div>
             ))}
@@ -133,113 +192,68 @@ export default function Accueil() {
       </section>
 
       {/* -------- CATEGORIES -------- */}
-      <section className="px-4 max-w-6xl mx-auto mb-10">
-        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 ml-28">
-          <span className="text-green-600">✿</span> Catégories
-        </h3>
-        <div className="flex flex-wrap gap-3 justify-center ">
-          <span className="px-10 py-5 bg-white shadow rounded-lg font-bold text-gray-700">
-            Artisanat
-            <p className="font-normal mt-1">1 oeuvre</p>
-          </span>
-          <span className="px-10 py-5 bg-white shadow rounded-lg font-bold text-gray-700">
-            Gastronomie
-            <p className="font-normal mt-1">1 oeuvre</p>
-          </span>
-          <span className="px-10 py-5 bg-white shadow rounded-lg font-bold text-gray-700">
-            Habits
-            <p className="font-normal mt-1">1 oeuvre</p>
-          </span>
-          <span className="px-10 py-5 bg-white shadow rounded-lg font-bold text-gray-700">
-            Architecture
-            <p className="font-normal mt-1">1 oeuvre</p>
-          </span>
-          <span className="px-10 py-5 bg-white shadow rounded-lg font-bold text-gray-700">
-            Musique & Danse
-            <p className="font-normal mt-1">1 oeuvre</p>
-          </span>
+      <section className="px-6 max-w-6xl mx-auto mb-12">
+        <div className="flex items-center gap-3 mb-8">
+          <span className="text-2xl text-green-600">🌸</span>
+          <h3 className="text-2xl font-bold">Catégories</h3>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {categories.map((category, index) => (
+            <div
+              key={index}
+              className="bg-white shadow-md rounded-lg p-6 text-center hover:shadow-lg transition-shadow"
+            >
+              <h4 className="font-bold text-gray-700 mb-2">{category.name}</h4>
+              <p className="text-sm text-gray-500">{category.count} œuvre</p>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* -------- EVENEMENTS -------- */}
-      <section className="px-4 max-w-6xl mx-auto mb-10">
-        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 ml-28">
-          <span className="text-pink-600">🎉</span> Événements à venir
-        </h3>
-        <div className="flex flex-wrap gap-6 justify-center">
-          {/* Carte événement 1 */}
-          <div className="flex flex-col w-64 bg-white rounded-xl shadow hover:shadow-lg transition p-4">
-            <img
-              src="/assets/img5.jpg"
-              alt=""
-              className="rounded-xl mb-3 h-36 object-cover"
-            />
-            <h4 className="font-semibold">Festival Gnaoua</h4>
-            <p className="text-sm text-gray-500 mt-1">Essaouira / Juin 2025</p>
-            <p className="text-sm text-gray-600 mt-2">
-              Festival de musique et spectacles traditionnels
-            </p>
-          </div>
-          {/* Carte événement 2 */}
-          <div className="flex flex-col w-64 bg-white rounded-xl shadow hover:shadow-lg transition p-4">
-            <img
-              src="/assets/img6.jpg"
-              alt=""
-              className="rounded-xl mb-3 h-36 object-cover"
-            />
-            <h4 className="font-semibold">Exposition d'art contemporain</h4>
-            <p className="text-sm text-gray-500 mt-1">Rabat / Août 2025</p>
-            <p className="text-sm text-gray-600 mt-2">
-              Œuvres d'artistes marocains émergents
-            </p>
-          </div>
-          {/* Carte événement 3 */}
-          <div className="flex flex-col w-64 bg-white rounded-xl shadow hover:shadow-lg transition p-4">
-            <img
-              src="/assets/img7.jpg"
-              alt=""
-              className="rounded-xl mb-3 h-36 object-cover"
-            />
-            <h4 className="font-semibold">Salon International du Livre</h4>
-            <p className="text-sm text-gray-500 mt-1">Casablanca / Juillet 2025</p>
-            <p className="text-sm text-gray-600 mt-2">Grand salon dédié à la littérature</p>
-          </div>
+      <section className="px-6 max-w-6xl mx-auto mb-12">
+        <div className="flex items-center gap-3 mb-8">
+          <span className="text-2xl text-[#D30046]">🎉</span>
+          <h3 className="text-2xl font-bold">Événements à venir</h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {evenements.map((event) => (
+            <div
+              key={event.id}
+              className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+            >
+              <img src={event.image} alt={event.title} className="w-full h-36 object-cover" />
+              <div className="p-4">
+                <h4 className="font-semibold mb-2">{event.title}</h4>
+                <p className="text-sm text-gray-500 mb-2">{event.location}</p>
+                <p className="text-sm text-gray-600">{event.description}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* -------- ARTISANS -------- */}
-      <section className="max-w-6xl mx-auto mb-10">
-        <h3 className="flex items-center text-lg font-semibold mb-4 ml-28">
-          <span className="text-yellow-600 mr-2">⭐</span> Artisan du mois
-        </h3>
-        <div className="flex flex-wrap gap-6 justify-center">
-          <div className="bg-white rounded-xl shadow-sm p-4 w-72 text-center">
-            <img
-              src="/assets/img8.jpg"
-              alt="Konza Benani"
-              className="w-30 h-30  mx-auto mb-3 object-cover"
-            />
-            <h4 className="font-medium">Konza Benani</h4>
-            <p className="text-sm text-gray-500 mt-2">Créatrice et artisane de bijoux</p>
-          </div>
-          <div className="bg-white rounded-xl shadow-sm p-4 w-72 text-center">
-            <img
-              src="/assets/img9.jpg"
-              alt="Abdelhamid Karim"
-              className="w-30 h-30  mx-auto mb-3 object-cover"
-            />
-            <h4 className="font-medium">Abdelhamid Karim</h4>
-            <p className="text-sm text-gray-500 mt-2">Designer & Artisan</p>
-          </div>
-          <div className="bg-white rounded-xl shadow-sm p-4 w-72 text-center">
-            <img
-              src="/assets/img10.jpg"
-              alt="Hassan Helqi"
-              className="w-30 h-30  mx-auto mb-3 object-cover"
-            />
-            <h4 className="font-medium">Hassan Helqi</h4>
-            <p className="text-sm text-gray-500 mt-2">Designer et artisan contemporain</p>
-          </div>
+      <section className="px-6 max-w-6xl mx-auto mb-12">
+        <div className="flex items-center gap-3 mb-8">
+          <span className="text-2xl text-yellow-600">⭐</span>
+          <h3 className="text-2xl font-bold">Artisan du mois</h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {artisans.map((artisan) => (
+            <div
+              key={artisan.id}
+              className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition-shadow"
+            >
+              <img
+                src={artisan.image}
+                alt={artisan.name}
+                className="w-full h-40 rounded-xl mx-auto mb-6 object-cover"
+              />
+              <h4 className="font-semibold mb-2">{artisan.name}</h4>
+              <p className="text-sm text-gray-500">{artisan.specialty}</p>
+            </div>
+          ))}
         </div>
       </section>
 

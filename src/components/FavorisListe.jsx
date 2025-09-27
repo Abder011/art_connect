@@ -14,10 +14,10 @@ export default function FavorisListe({ favoris, onRemove }) {
             <h3 className="font-semibold text-lg">{item.title}</h3>
             <p className="text-sm text-gray-500">{item.category}</p>
             <button
-              className="mt-2 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+              className="bg-[#D30046] text-white px-7 py-3 mt-6 rounded-lg font-medium hover:bg-[#B8003A] transition-colors"
               onClick={() => onRemove(item.id)}
             >
-              Supprimer
+              Retirer des faboris
             </button>
           </div>
         </div>
