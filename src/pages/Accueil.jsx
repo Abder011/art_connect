@@ -127,9 +127,6 @@ export default function Accueil() {
         <p className="text-gray-600 mb-8 text-lg">
           Explorez les œuvres, les artisans et la culture de toutes les régions du Maroc
         </p>
-        <button className="bg-[#D30046] text-white px-7 py-3 mb-6 rounded-lg font-medium hover:bg-[#B8003A] transition-colors">
-          Publier une œuvre
-        </button>
       </header>
 
       {/* -------- BARRE DE RECHERCHE -------- */}
