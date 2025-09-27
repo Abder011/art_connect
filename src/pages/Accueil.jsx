@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useGlobal } from "../context/GlobalContext"; 
+import { useGlobal } from "../context/GlobalContext";
 import Footer from "../components/Footer";
-
 
 export default function Accueil() {
   const { addToFavoris, removeFromFavoris, isFavorite } = useGlobal();
@@ -103,6 +102,20 @@ export default function Accueil() {
     }
   };
 
+  // -------- Filtrage auto --------
+  const filteredAjouts = derniersAjouts.filter((item) => {
+    const matchSearch =
+      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.location.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchCategory =
+      selectedCategory === "" ||
+      item.category.toLowerCase() === selectedCategory.toLowerCase();
+
+    return matchSearch && matchCategory;
+  });
+
   return (
     <div className="bg-[#fff7f5] min-h-screen text-gray-800">
       {/* -------- HEADER -------- */}
@@ -120,7 +133,7 @@ export default function Accueil() {
       </header>
 
       {/* -------- BARRE DE RECHERCHE -------- */}
-      <section className="bg-white mx-auto rounded-xl shadow-sm p-6 mb-5 mx-40">
+      <section className="bg-white rounded-xl shadow-sm p-6 mb-50 mx-40">
         <h2 className="text-center text-xl font-semibold mb-6">Découvrez le patrimoine marocain</h2>
         <div className="flex flex-wrap gap-4 justify-center items-center">
           <div className="flex items-center border rounded-lg px-4 py-3 flex-1 min-w-[200px] bg-gray-50">
@@ -139,18 +152,12 @@ export default function Accueil() {
             className="border rounded-lg px-4 py-3 min-w-[140px] bg-white"
           >
             <option value="">Catégorie</option>
-            <option value="artisanat">Artisanat</option>
-            <option value="gastronomie">Gastronomie</option>
-            <option value="habits">Habits</option>
-            <option value="architecture">Architecture</option>
-            <option value="musique">Musique & Danse</option>
+            <option value="Artisanat">Artisanat</option>
+            <option value="Gastronomie">Gastronomie</option>
+            <option value="Habits">Habits</option>
+            <option value="Architecture">Architecture</option>
+            <option value="Musique & Danse">Musique & Danse</option>
           </select>
-          <button className="bg-[#D30046] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#B8003A] transition-colors">
-            Rechercher
-          </button>
-          <button className="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors">
-            Réinitialiser
-          </button>
         </div>
       </section>
 
@@ -163,30 +170,38 @@ export default function Accueil() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {derniersAjouts.map((item) => (
-              <div
-                key={item.id}
-                className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-              >
-                <div className="relative">
-                  <img src={item.image} alt={item.title} className="w-full h-48 object-cover" />
-                  <button
-                    onClick={() => handleFavoriteToggle(item)}
-                    className={`absolute top-3 right-3 w-10 h-10 rounded-full shadow-md flex items-center justify-center transition-colors ${
-                      isFavorite(item.id) ? "bg-[#D30046] text-white" : "bg-white text-gray-400 hover:text-[#D30046]"
-                    }`}
-                  >
-                    ❤️
-                  </button>
+            {filteredAjouts.length > 0 ? (
+              filteredAjouts.map((item) => (
+                <div
+                  key={item.id}
+                  className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                >
+                  <div className="relative">
+                    <img src={item.image} alt={item.title} className="w-full h-48 object-cover" />
+                    <button
+                      onClick={() => handleFavoriteToggle(item)}
+                      className={`absolute top-3 right-3 w-10 h-10 rounded-full shadow-md flex items-center justify-center transition-colors ${
+                        isFavorite(item.id)
+                          ? "bg-[#D30046] text-white"
+                          : "bg-white text-gray-400 hover:text-[#D30046]"
+                      }`}
+                    >
+                      ❤️
+                    </button>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
+                    <p className="text-sm text-gray-500 flex items-center gap-1 mb-2">
+                      📍 {item.location}
+                    </p>
+                    <p className="text-gray-700 text-sm mb-3">{item.description}</p>
+                    <p className="text-xs text-gray-500">Par {item.author}</p>
+                  </div>
                 </div>
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
-                  <p className="text-sm text-gray-500 flex items-center gap-1 mb-2">📍 {item.location}</p>
-                  <p className="text-gray-700 text-sm mb-3">{item.description}</p>
-                  <p className="text-xs text-gray-500">Par {item.author}</p>
-                </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-gray-500">Aucune œuvre trouvée.</p>
+            )}
           </div>
         </div>
       </section>
