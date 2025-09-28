@@ -1,32 +1,62 @@
-"use client";
-import { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
-const GlobalContext = createContext();
+const GlobalContext = createContext(null);
 
 export function GlobalProvider({ children }) {
-  // Favoris (déjà existant)
-  const [favoris, setFavoris] = useState([]);
+  // favoris (persistés dans localStorage)
+  const [favoris, setFavoris] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("favoris") || "[]");
+    } catch (e) {
+      return [];
+    }
+  });
 
-  // 🔴 Nouveau : œuvres publiées
+  // oeuvres publiées par les utilisateurs (en mémoire seulement)
   const [oeuvres, setOeuvres] = useState([]);
 
-  const addToFavoris = (item) => setFavoris((prev) => [...prev, item]);
-  const removeFromFavoris = (id) =>
-    setFavoris((prev) => prev.filter((item) => item.id !== id));
-  const isFavorite = (id) => favoris.some((item) => item.id === id);
+  // sync favoris -> localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem("favoris", JSON.stringify(favoris));
+    } catch (e) {}
+  }, [favoris]);
 
-  // 🔴 Fonction pour publier une œuvre
-  const publierOeuvre = (oeuvre) => {
-    setOeuvres((prev) => [...prev, { id: Date.now(), ...oeuvre }]);
+  // Favoris helpers
+  const addToFavoris = (item) => {
+    if (!favoris.some((f) => f.id === item.id)) {
+      setFavoris((p) => [...p, item]);
+    }
+  };
+  const removeFromFavoris = (id) => setFavoris((p) => p.filter((f) => f.id !== id));
+  const isFavorite = (id) => favoris.some((f) => f.id === id);
+
+  // Publier une oeuvre (en mémoire)
+  const publierOeuvre = (newItem) => {
+    // assigne un id unique
+    const itemWithId = { ...newItem, id: Date.now() };
+    // on met les publiées en tête pour qu'elles apparaissent en premier
+    setOeuvres((p) => [itemWithId, ...p]);
   };
 
   return (
     <GlobalContext.Provider
-      value={{ favoris, addToFavoris, removeFromFavoris, isFavorite, oeuvres, publierOeuvre }}
+      value={{
+        favoris,
+        addToFavoris,
+        removeFromFavoris,
+        isFavorite,
+        oeuvres,
+        publierOeuvre,
+      }}
     >
       {children}
     </GlobalContext.Provider>
   );
 }
 
-export const useGlobal = () => useContext(GlobalContext);
+export const useGlobal = () => {
+  const ctx = useContext(GlobalContext);
+  if (!ctx) throw new Error("useGlobal must be used inside GlobalProvider");
+  return ctx;
+};
