@@ -3,72 +3,86 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 const GlobalContext = createContext(null);
 
 export function GlobalProvider({ children }) {
-  // Favoris persistés
-  const [favoris, setFavoris] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem("favoris") || "[]");
-    } catch (e) {
-      return [];
-    }
-  });
-
-  // Œuvres publiées
+  // -------- Œuvres --------
   const [oeuvres, setOeuvres] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem("oeuvres") || "[]");
-    } catch (e) {
-      return [];
-    }
+    } catch { return []; }
   });
 
-  // Sync favoris -> localStorage
-  useEffect(() => {
-    localStorage.setItem("favoris", JSON.stringify(favoris));
-  }, [favoris]);
+  const publierOeuvre = (item) => {
+    const itemWithId = { ...item, id: Date.now() };
+    setOeuvres(p => [itemWithId, ...p]);
+  };
 
-  // Sync oeuvres -> localStorage
-  useEffect(() => {
-    localStorage.setItem("oeuvres", JSON.stringify(oeuvres));
-  }, [oeuvres]);
+  const supprimerOeuvre = (id) => setOeuvres(p => p.filter(o => o.id !== id));
 
-  // Favoris helpers
+  // -------- Catégories --------
+  const [categories, setCategories] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("categories") || "[]"); }
+    catch { return []; }
+  });
+
+  const ajouterCategorie = (item) => {
+    const newItem = { ...item, id: Date.now() };
+    setCategories(p => [...p, newItem]);
+  };
+
+  const supprimerCategorie = (id) => setCategories(p => p.filter(c => c.id !== id));
+
+  // -------- Artisans --------
+  const [artisans, setArtisans] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("artisans") || "[]"); }
+    catch { return []; }
+  });
+
+  const ajouterArtisan = (item) => {
+    const newItem = { ...item, id: Date.now() };
+    setArtisans(p => [...p, newItem]);
+  };
+
+  const supprimerArtisan = (id) => setArtisans(p => p.filter(a => a.id !== id));
+
+  // -------- Événements --------
+  const [evenements, setEvenements] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("evenements") || "[]"); }
+    catch { return []; }
+  });
+
+  const ajouterEvenement = (item) => {
+    const newItem = { ...item, id: Date.now() };
+    setEvenements(p => [...p, newItem]);
+  };
+
+  const supprimerEvenement = (id) => setEvenements(p => p.filter(e => e.id !== id));
+
+  // -------- Favoris (optionnel) --------
+  const [favoris, setFavoris] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("favoris") || "[]"); }
+    catch { return []; }
+  });
+
   const addToFavoris = (item) => {
-    if (!favoris.some((f) => f.id === item.id)) {
-      setFavoris((p) => [...p, item]);
-    }
+    if (!favoris.some(f => f.id === item.id)) setFavoris(p => [...p, item]);
   };
-  const removeFromFavoris = (id) => setFavoris((p) => p.filter((f) => f.id !== id));
-  const isFavorite = (id) => favoris.some((f) => f.id === id);
+  const removeFromFavoris = (id) => setFavoris(p => p.filter(f => f.id !== id));
+  const isFavorite = (id) => favoris.some(f => f.id === id);
 
-  // Ajouter une œuvre
-  const publierOeuvre = (newItem) => {
-    const itemWithId = { ...newItem, id: Date.now() };
-    setOeuvres((p) => [itemWithId, ...p]);
-  };
-
-  // Modifier une œuvre
-  const modifierOeuvre = (updatedItem) => {
-    setOeuvres((p) => p.map((o) => (o.id === updatedItem.id ? updatedItem : o)));
-  };
-
-  // Supprimer une œuvre
-  const supprimerOeuvre = (id) => {
-    setOeuvres((p) => p.filter((o) => o.id !== id));
-  };
+  // -------- Sync avec localStorage --------
+  useEffect(() => { localStorage.setItem("oeuvres", JSON.stringify(oeuvres)); }, [oeuvres]);
+  useEffect(() => { localStorage.setItem("categories", JSON.stringify(categories)); }, [categories]);
+  useEffect(() => { localStorage.setItem("artisans", JSON.stringify(artisans)); }, [artisans]);
+  useEffect(() => { localStorage.setItem("evenements", JSON.stringify(evenements)); }, [evenements]);
+  useEffect(() => { localStorage.setItem("favoris", JSON.stringify(favoris)); }, [favoris]);
 
   return (
-    <GlobalContext.Provider
-      value={{
-        favoris,
-        addToFavoris,
-        removeFromFavoris,
-        isFavorite,
-        oeuvres,
-        publierOeuvre,
-        modifierOeuvre,
-        supprimerOeuvre,
-      }}
-    >
+    <GlobalContext.Provider value={{
+      oeuvres, publierOeuvre, supprimerOeuvre,
+      categories, ajouterCategorie, supprimerCategorie,
+      artisans, ajouterArtisan, supprimerArtisan,
+      evenements, ajouterEvenement, supprimerEvenement,
+      favoris, addToFavoris, removeFromFavoris, isFavorite
+    }}>
       {children}
     </GlobalContext.Provider>
   );
