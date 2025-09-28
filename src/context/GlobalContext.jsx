@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 const GlobalContext = createContext(null);
 
 export function GlobalProvider({ children }) {
-  // favoris (persistés dans localStorage)
+  // Favoris persistés
   const [favoris, setFavoris] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem("favoris") || "[]");
@@ -12,15 +12,24 @@ export function GlobalProvider({ children }) {
     }
   });
 
-  // oeuvres publiées par les utilisateurs (en mémoire seulement)
-  const [oeuvres, setOeuvres] = useState([]);
-
-  // sync favoris -> localStorage
-  useEffect(() => {
+  // Œuvres publiées
+  const [oeuvres, setOeuvres] = useState(() => {
     try {
-      localStorage.setItem("favoris", JSON.stringify(favoris));
-    } catch (e) {}
+      return JSON.parse(localStorage.getItem("oeuvres") || "[]");
+    } catch (e) {
+      return [];
+    }
+  });
+
+  // Sync favoris -> localStorage
+  useEffect(() => {
+    localStorage.setItem("favoris", JSON.stringify(favoris));
   }, [favoris]);
+
+  // Sync oeuvres -> localStorage
+  useEffect(() => {
+    localStorage.setItem("oeuvres", JSON.stringify(oeuvres));
+  }, [oeuvres]);
 
   // Favoris helpers
   const addToFavoris = (item) => {
@@ -31,12 +40,20 @@ export function GlobalProvider({ children }) {
   const removeFromFavoris = (id) => setFavoris((p) => p.filter((f) => f.id !== id));
   const isFavorite = (id) => favoris.some((f) => f.id === id);
 
-  // Publier une oeuvre (en mémoire)
+  // Ajouter une œuvre
   const publierOeuvre = (newItem) => {
-    // assigne un id unique
     const itemWithId = { ...newItem, id: Date.now() };
-    // on met les publiées en tête pour qu'elles apparaissent en premier
     setOeuvres((p) => [itemWithId, ...p]);
+  };
+
+  // Modifier une œuvre
+  const modifierOeuvre = (updatedItem) => {
+    setOeuvres((p) => p.map((o) => (o.id === updatedItem.id ? updatedItem : o)));
+  };
+
+  // Supprimer une œuvre
+  const supprimerOeuvre = (id) => {
+    setOeuvres((p) => p.filter((o) => o.id !== id));
   };
 
   return (
@@ -48,6 +65,8 @@ export function GlobalProvider({ children }) {
         isFavorite,
         oeuvres,
         publierOeuvre,
+        modifierOeuvre,
+        supprimerOeuvre,
       }}
     >
       {children}

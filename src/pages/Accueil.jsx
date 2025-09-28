@@ -76,8 +76,8 @@ export default function Accueil() {
     else addToFavoris(item);
   };
 
-  // Combine oeuvres du contexte (publiées) + derniersAjouts (fixes)
-  const combinedList = [...oeuvres, ...derniersAjouts];
+// Combine oeuvres du contexte + derniersAjouts, sorted by newest first
+const combinedList = [...oeuvres, ...derniersAjouts].sort((a, b) => b.id - a.id);
 
   // -------- Comptage des catégories --------
   const categoriesList = ["Artisanat", "Habits", "Gastronomie", "Musique & Danse", "Architecture"];
