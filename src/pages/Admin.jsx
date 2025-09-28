@@ -27,23 +27,23 @@ export default function Admin() {
     }
   };
 
-  const handleAddItem = () => {
-    if (!newItem.titre || !newItem.categorie || !newItem.description || !newItem.region) {
-      alert("Veuillez remplir tous les champs");
-      return;
-    }
+const handleAddItem = () => {
+  if (!newItem.titre || !newItem.categorie || !newItem.description || !newItem.region) {
+    alert("Veuillez remplir tous les champs");
+    return;
+  }
 
-    publierOeuvre(newItem);
+  publierOeuvre({ ...newItem, author: "Salma" }); // ajout author
 
-    setNewItem({
-      titre: "",
-      categorie: "",
-      description: "",
-      region: "",
-      image: "",
-    });
-    alert("Œuvre ajoutée avec succès !");
-  };
+  setNewItem({
+    titre: "",
+    categorie: "",
+    description: "",
+    region: "",
+    image: "",
+  });
+  alert("Œuvre ajoutée avec succès !");
+};
 
   const handleEdit = (item) => setEditingItem({ ...item });
   const handleSaveEdit = () => {
