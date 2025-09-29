@@ -1,21 +1,20 @@
 "use client"
-
 import { useState } from "react"
 import { useGlobal } from "../context/GlobalContext"
 
 export default function Publier() {
-  const { publierOeuvre } = useGlobal()
+  const { publierOeuvre, categories } = useGlobal()
 
   const [formData, setFormData] = useState({
     titre: "",
     categorie: "",
     region: "",
+    description: "",
     image: null,
   })
   const [imagePreview, setImagePreview] = useState(null)
   const [isDragOver, setIsDragOver] = useState(false)
-
-  const categories = ["Artisanat", "Gastronomie", "Habits", "Architecture", "Musique & Danse"]
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -62,165 +61,192 @@ export default function Publier() {
     handleImageUpload(file)
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-
-    if (!formData.titre || !formData.categorie || !formData.region || !formData.image) {
+    
+    if (!formData.titre || !formData.categorie || !formData.region || !formData.description) {
       alert("Veuillez remplir tous les champs obligatoires")
       return
     }
 
-    // 🔴 Ajouter l'œuvre au contexte global
-    publierOeuvre({
-      title: formData.titre,
-      category: formData.categorie,
-      location: formData.region,
-      description: "Ajouté par la communauté",
-      author: "Utilisateur",
-      image: imagePreview,
-    })
+    setIsSubmitting(true)
 
-    alert("Œuvre publiée avec succès !")
+    try {
+      // Simuler l'upload d'image (dans un vrai projet, uploader vers un service cloud)
+      const imageUrl = imagePreview || "/placeholder.svg"
 
-    // Reset form
-    setFormData({ titre: "", categorie: "", region: "", image: null })
-    setImagePreview(null)
+      const oeuvreData = {
+        ...formData,
+        image: imageUrl,
+        author: "Utilisateur",
+        datePublication: new Date().toISOString()
+      }
+
+      await publierOeuvre(oeuvreData)
+      
+      alert("Votre œuvre a été publiée avec succès !")
+      
+      // Réinitialiser le formulaire
+      setFormData({
+        titre: "",
+        categorie: "",
+        region: "",
+        description: "",
+        image: null,
+      })
+      setImagePreview(null)
+    } catch (error) {
+      alert("Erreur lors de la publication. Veuillez réessayer.")
+      console.error("Erreur publication:", error)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
-    <div className="bg-[#fff7f5] min-h-screen py-8">
-      <div className="max-w-2xl mx-auto px-6">
-        {/* Header */}
+    <div className="min-h-screen bg-[#fff9f7] py-8">
+      <div className="max-w-2xl mx-auto px-4">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">Publier une oeuvre ou artisanat</h1>
-          <p className="text-gray-600">Partagez votre contribution au patrimoine culturel marocain</p>
+          <h1 className="text-3xl font-bold">Publier une <span className="text-[#D30046]">Œuvre</span></h1>
+          <p className="text-gray-600 mt-2">Partagez votre création avec la communauté</p>
         </div>
 
-        {/* Form */}
-        <div className="bg-white rounded-2xl shadow-lg p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Titre */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Titre de l'oeuvre <span className="text-[#D30046]">*</span>
-              </label>
+        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg p-8">
+          {/* Upload d'image */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Image de l'œuvre *
+            </label>
+            <div
+              className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
+                isDragOver ? "border-[#D30046] bg-[#D30046]/5" : "border-gray-300 hover:border-[#D30046]"
+              }`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              onClick={() => document.getElementById("image-upload").click()}
+            >
               <input
-                type="text"
-                name="titre"
-                value={formData.titre}
-                onChange={handleInputChange}
-                placeholder="Ex : Tapis berbère"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D30046] focus:border-[#D30046] outline-none transition-colors"
-                required
+                id="image-upload"
+                type="file"
+                accept="image/*"
+                onChange={handleFileSelect}
+                className="hidden"
               />
-            </div>
-
-            {/* Catégorie et Région */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Catégorie <span className="text-[#D30046]">*</span>
-                </label>
-                <select
-                  name="categorie"
-                  value={formData.categorie}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D30046] focus:border-[#D30046] outline-none transition-colors bg-white"
-                  required
-                >
-                  <option value="">Sélectionnez une catégorie</option>
-                  {categories.map((cat) => (
-                    <option key={cat} value={cat}>{cat}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Région / Ville <span className="text-[#D30046]">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="region"
-                  value={formData.region}
-                  onChange={handleInputChange}
-                  placeholder="Ex : Casablanca"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D30046] focus:border-[#D30046] outline-none transition-colors"
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Image Upload */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Image <span className="text-[#D30046]">*</span>
-              </label>
-
-              <div
-                className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-                  isDragOver ? "border-[#D30046] bg-red-50" : "border-gray-300 hover:border-[#D30046]"
-                }`}
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-              >
-                {imagePreview ? (
-                  <div className="space-y-4">
-                    <img
-                      src={imagePreview}
-                      alt="Preview"
-                      className="max-w-full max-h-48 mx-auto rounded-lg object-cover"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setImagePreview(null)
-                        setFormData((prev) => ({ ...prev, image: null }))
-                      }}
-                      className="text-[#D30046] hover:text-red-700 text-sm font-medium"
-                    >
-                      Supprimer l'image
-                    </button>
+              
+              {imagePreview ? (
+                <div className="space-y-2">
+                  <img
+                    src={imagePreview}
+                    alt="Aperçu"
+                    className="mx-auto h-32 w-32 object-cover rounded-lg"
+                  />
+                  <p className="text-sm text-gray-600">Cliquez pour changer l'image</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <div className="mx-auto h-12 w-12 text-gray-400">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
                   </div>
-                ) : (
-                  <div className="space-y-4">
-                    <div className="text-6xl text-gray-400">📷</div>
-                    <div>
-                      <p className="text-gray-600 mb-2">Glissez-déposez une image ou cliquez pour télécharger</p>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileSelect}
-                        className="hidden"
-                        id="image-upload"
-                      />
-                      <label
-                        htmlFor="image-upload"
-                        className="inline-block bg-[#D30046] text-white px-6 py-2 rounded-lg cursor-pointer hover:bg-[#B8003A] transition-colors"
-                      >
-                        Choisir une image
-                      </label>
-                    </div>
+                  <div>
+                    <p className="text-sm text-gray-600">
+                      <span className="text-[#D30046] font-medium">Cliquez pour uploader</span> ou glissez-déposez
+                    </p>
+                    <p className="text-xs text-gray-500">PNG, JPG, JPEG (max. 5MB)</p>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
+          </div>
 
-            {/* Footer */}
-            <div className="flex items-center justify-between pt-4">
-              <p className="text-sm text-gray-500">
-                <span className="text-[#D30046]">*</span> Champs obligatoires
-              </p>
-              <button
-                type="submit"
-                className="bg-[#D30046] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#B8003A] transition-colors focus:ring-2 focus:ring-[#D30046] focus:ring-offset-2"
-              >
-                Publier
-              </button>
-            </div>
-          </form>
-        </div>
+          {/* Titre */}
+          <div className="mb-4">
+            <label htmlFor="titre" className="block text-sm font-medium text-gray-700 mb-1">
+              Titre de l'œuvre *
+            </label>
+            <input
+              type="text"
+              id="titre"
+              name="titre"
+              value={formData.titre}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D30046] focus:border-transparent"
+              placeholder="Donnez un titre à votre œuvre"
+              required
+            />
+          </div>
+
+          {/* Catégorie */}
+          <div className="mb-4">
+            <label htmlFor="categorie" className="block text-sm font-medium text-gray-700 mb-1">
+              Catégorie *
+            </label>
+            <select
+              id="categorie"
+              name="categorie"
+              value={formData.categorie}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D30046] focus:border-transparent"
+              required
+            >
+              <option value="">Sélectionnez une catégorie</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.name}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Région */}
+          <div className="mb-4">
+            <label htmlFor="region" className="block text-sm font-medium text-gray-700 mb-1">
+              Région *
+            </label>
+            <input
+              type="text"
+              id="region"
+              name="region"
+              value={formData.region}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D30046] focus:border-transparent"
+              placeholder="Région d'origine"
+              required
+            />
+          </div>
+
+          {/* Description */}
+          <div className="mb-6">
+            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+              Description *
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              rows={4}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D30046] focus:border-transparent"
+              placeholder="Décrivez votre œuvre en détail..."
+              required
+            />
+          </div>
+
+          {/* Bouton de soumission */}
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className={`w-full py-3 px-4 rounded-lg font-medium text-white transition-colors ${
+              isSubmitting
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-[#D30046] hover:bg-[#b8003d]"
+            }`}
+          >
+            {isSubmitting ? "Publication en cours..." : "Publier l'œuvre"}
+          </button>
+        </form>
       </div>
     </div>
   )
